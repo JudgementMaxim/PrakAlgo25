@@ -65,20 +65,16 @@ class Transactions:
         """
         if not tx.product_name:
             return 0
-        first = tx.product_name[0].lower()
-        # Map 'a'..'z' to 0..25, everything else also squeezed into the table
 
-        naturalHash = ord(first)-ord('a')
-        hash1 = naturalHash % self._capacity
-        hash2 = 1 + (naturalHash % (self._capacity - 1))
+        # new: using polonymial rolling hash (without high prime m, capacity will work as m assuming the table is of prime size)
 
-        i = 0
-        index = hash1
-        while self._buckets[index] != None :
-            i += 1
-            index = (hash1 + i * hash2 ) % self._capacity
-
-        return index
+        p = 31
+        pow = 1
+        h = 0
+        for c in tx.product_name.lower():
+            h += (ord(c) - ord('a') + 1) * pow
+            pow *= p
+        return h % self._capacity
 
 
 
