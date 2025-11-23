@@ -67,5 +67,18 @@ class Transactions:
             return 0
         first = tx.product_name[0].lower()
         # Map 'a'..'z' to 0..25, everything else also squeezed into the table
-        return (ord(first) - ord('a')) % self._capacity
+
+        naturalHash = ord(first)-ord('a')
+        hash1 = naturalHash % self._capacity
+        hash2 = 1 + (naturalHash % (self._capacity - 1))
+
+        i = 0
+        index = hash1
+        while self._buckets[index] != None :
+            i += 1
+            index = (hash1 + i * hash2 ) % self._capacity
+
+        return index
+
+
 
