@@ -1,4 +1,6 @@
 # Definiert die Klassen Praktikumsgruppen und SetNode, implementiert als Dictionary
+# Aufgabe 2: Die Nutzer sind in einem Dictonary (ABT) gespeichert. 
+#Die Datenstruktur ist Python Diconary(dict) außerdem ist der user_id der Key und das Value der User-Objekt.
 
 
 class SetNode:
@@ -11,6 +13,7 @@ class SetNode:
         _parent (SetNode): The parent node in the union-find structure.
         _weight (int): The weight (number of nodes) of the (sub-)tree rooted in the current node.
     """
+        
 
     # *** CONSTRUCTORS ***
     def __init__(self):
@@ -20,7 +23,9 @@ class SetNode:
         # TODO: werden nur für Praktikum 3 benötigt
         self._parent = self  # parent Knoten des SetNode Objekts. self bedeutet, dass der Knoten ein Wurzelknoten ist
         self._weight = 1  # Gewicht (Anzahl Knoten) des (Teil-)Baumes, der in dem SetNode Objekt verwurzelt ist
-
+        
+        # SetNode erweiterung
+        self._praktikumsgruppe = None
     # *** PUBLIC SET methods ***
 
     # TODO: implementieren Sie in Praktikum 3 die benötigten Methoden
@@ -29,7 +34,7 @@ class SetNode:
 
     # TODO: implementieren Sie in Praktikum 3 die benötigten Methoden
 
-
+    
 class Praktikumsgruppen(dict):
     """
     In Praktikum 1 und 2: Dictionary containing all students. Die Klasse user.Users erbt von dieser Klasse.
@@ -104,3 +109,4 @@ class Praktikumsgruppen(dict):
     # *** PUBLIC methods to return class properties ***
 
     # *** PRIVATE variables ***
+
