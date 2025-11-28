@@ -85,7 +85,8 @@ class Praktikumsgruppen(dict):
             groupnumbers (list): A list of group numbers corresponding to the user IDs.
         """
         # TODO: implement in Praktikum 1
-        pass
+         for user_id, groupnumber in zip(user_ids, groupnumbers):
+            self._groups[user_id] = groupnumber
 
     # *** PUBLIC GET methods ***
 
@@ -99,8 +100,15 @@ class Praktikumsgruppen(dict):
         Returns:
             list: A list of user IDs in the same group.
         """
+        if user_id not in self._groups:
+            return []
+
+        user_group = self._groups[user_id]
+
+        return [uid for uid, g in self._groups.items() if g == user_group]
+
         # TODO: implement in Praktikum 1
-        pass
+       
 
     # *** PUBLIC STATIC methods ***
 
@@ -109,4 +117,5 @@ class Praktikumsgruppen(dict):
     # *** PUBLIC methods to return class properties ***
 
     # *** PRIVATE variables ***
+
 
