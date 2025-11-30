@@ -657,6 +657,10 @@ class AuctionAppInit:
             self.trie.insert(product_name)
             self.avl_tree.insert(product_name, count)
 
+        for user in self._users.values():
+            self.trie.insert(user.id())
+
+
     def show_tooltip(self, suggestions):
         if self.tooltip:
             self.tooltip.destroy()
@@ -726,3 +730,4 @@ class AuctionAppInit:
     @staticmethod
     def simple_input(title, prompt):
         return simpledialog.askstring(title, prompt)
+
