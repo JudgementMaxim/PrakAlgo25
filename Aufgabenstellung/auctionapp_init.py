@@ -520,8 +520,8 @@ class AuctionAppInit:
     def show_suggestions(self, event):
         search_text = self.search_entry.get()
         if search_text:
-            suggestions = self.trie.search(search_text)
-            # avl_suggestions = self.avl_tree.find_most_likely_words(search_text)
+            # AVL-Baum Auto-Vervollständigung
+            avl_suggestions = self.avl_tree.find_most_likely_words(Search_text)
             self.show_tooltip(suggestions)
         else:
             self.hide_tooltip()
@@ -730,4 +730,5 @@ class AuctionAppInit:
     @staticmethod
     def simple_input(title, prompt):
         return simpledialog.askstring(title, prompt)
+
 
