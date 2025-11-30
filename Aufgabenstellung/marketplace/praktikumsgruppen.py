@@ -1,6 +1,4 @@
 # Definiert die Klassen Praktikumsgruppen und SetNode, implementiert als Dictionary
-# Aufgabe 2: Die Nutzer sind in einem Dictonary (ABT) gespeichert. 
-#Die Datenstruktur ist Python Diconary(dict) außerdem ist der user_id der Key und das Value der User-Objekt.
 
 
 class SetNode:
@@ -117,5 +115,6 @@ class Praktikumsgruppen(dict):
     # *** PUBLIC methods to return class properties ***
 
     # *** PRIVATE variables ***
+
 
 
