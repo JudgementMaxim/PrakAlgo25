@@ -66,15 +66,15 @@ class Transactions:
         if not tx.product_name:
             return 0
 
-        # new: using polonymial rolling hash (without high prime m, capacity will work as m assuming the table is of prime size)
+        # new: using polonymial rolling hash
 
-        p = 31
+        p = 31  # small prime and positive integer
+        m = int(1e9 + 7)  # large prime and positive integer
         pow = 1
         h = 0
         for c in tx.product_name.lower():
-            h += (ord(c) - ord('a') + 1) * pow
-            pow *= p
+            h = (h + (ord(c) - ord('a') + 1) * pow) % m
+            pow = (pow * p) % m
         return h % self._capacity
-
 
 
