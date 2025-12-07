@@ -35,9 +35,8 @@ class Auctions(dict):
         self._id_next_auction = 0
 
         # für erstes Praktikum auf None setzen und für 2. Praktikum auf MaxHeap()
-        try:
-            self._heap = MaxHeap()  
-        
+        # Im Praktikum 2 MUSS der MaxHeap aktiviert werden
+        self._heap = MaxHeap()
 
         # TODO: für 2. Praktikum: erstelle hier ein MaxHeap, um den besten User/Verkäufer mit der Methode
         #  get_top_rated_user() (s.u.) in konstanter Zeit zurück geben zu können. auf der GUI gibt es noch keinen Button
@@ -84,8 +83,6 @@ class Auctions(dict):
     def bid_in_auction(self, auction_id, user, bid_amount):
         if auction_id in self:
             success = self[auction_id].bid(user, bid_amount)
-
-            
             if success and self._heap is not None:
                 self._heap.update_bidders(auction_id, self[auction_id].bid_count())
             return success
@@ -430,4 +427,3 @@ class Auctions(dict):
 
     def users(self):
         return self._users
-
