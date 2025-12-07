@@ -34,7 +34,7 @@ class MaxHeap:
 
         # hinten anhängen
         self.heap.append((bid_count, auction_id))
-        MaxHeap.index = len(self.heap) - 1
+        index = len(self.heap) - 1
 
         # in HashMap eintragen
         self.auction_map[auction_id] = (bid_count, index)
@@ -166,7 +166,7 @@ class MaxHeap:
 
             # tauschen
             self._swap(parent, index)
-            MaxHeap.index = parent
+            index = parent
 
 
     def _heapify_down(self, index):
@@ -194,7 +194,8 @@ class MaxHeap:
                 break
 
             self._swap(index, largest)
-            MaxHeap.index = largest
+            index = largest
+
 
 
 
