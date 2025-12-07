@@ -157,7 +157,7 @@ class MaxHeap:
             index: Der Index des Elements, das nach oben "heapified" werden soll.
         """
         # TODO:
-         while MaxHeap.index > 0:
+         while index > 0:
             parent = (index - 1) // 2
 
             # wenn Elternknoten größer → fertig
@@ -195,6 +195,7 @@ class MaxHeap:
 
             self._swap(index, largest)
             index = largest
+
 
 
 
