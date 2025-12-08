@@ -35,8 +35,8 @@ class Auctions(dict):
         self._id_next_auction = 0
 
         # für erstes Praktikum auf None setzen und für 2. Praktikum auf MaxHeap()
-        try:
-            self._heap = MaxHeap()  
+
+        self._heap = MaxHeap()
         
 
         # TODO: für 2. Praktikum: erstelle hier ein MaxHeap, um den besten User/Verkäufer mit der Methode

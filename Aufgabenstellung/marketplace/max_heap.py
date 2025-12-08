@@ -16,12 +16,12 @@ class MaxHeap:
         self.auction_map = {}
 
         # TODO: wenn Sie die anderen Methoden implementiert haben, können Sie diese Zeile auskommentieren
-        raise NotImplementedError
+        """raise NotImplementedError"""
 
     # *** PUBLIC methods ***
 
     def add_auction(self, auction_id, bid_count):
-           """ Fügt eine neue Auktion zum Max-Heap hinzu.
+        """ Fügt eine neue Auktion zum Max-Heap hinzu.
             Wenn die Auktion schon im heap ist, wird die Auktion nicht hinzugefügt.
 
         Args:
@@ -157,7 +157,7 @@ class MaxHeap:
             index: Der Index des Elements, das nach oben "heapified" werden soll.
         """
         # TODO:
-         while index > 0:
+        while index > 0:
             parent = (index - 1) // 2
 
             # wenn Elternknoten größer → fertig

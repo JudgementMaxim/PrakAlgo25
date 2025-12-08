@@ -18,6 +18,8 @@ class SetNode:
         """
         Initializes a new SetNode.
         """
+        super().__init__()
+        self._groups = {}
         # TODO: werden nur für Praktikum 3 benötigt
         self._parent = self  # parent Knoten des SetNode Objekts. self bedeutet, dass der Knoten ein Wurzelknoten ist
         self._weight = 1  # Gewicht (Anzahl Knoten) des (Teil-)Baumes, der in dem SetNode Objekt verwurzelt ist
@@ -53,6 +55,8 @@ class Praktikumsgruppen(dict):
         Initializes a new Praktikumsgruppen object.
         """
         super().__init__()
+        self._groups = {}
+        self._groupnumbers = []
 
     # *** PUBLIC methods ***
 
@@ -83,7 +87,7 @@ class Praktikumsgruppen(dict):
             groupnumbers (list): A list of group numbers corresponding to the user IDs.
         """
         # TODO: implement in Praktikum 1
-         for user_id, groupnumber in zip(user_ids, groupnumbers):
+        for user_id, groupnumber in zip(user_ids, groupnumbers):
             self._groups[user_id] = groupnumber
 
     # *** PUBLIC GET methods ***
