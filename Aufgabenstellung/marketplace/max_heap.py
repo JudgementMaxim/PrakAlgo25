@@ -196,4 +196,17 @@ class MaxHeap:
             self._swap(index, largest)
             index = largest
 
+    def insert(self, value):
+        self.heap.append(value)
+        self.heap.sort(reverse=True)  # einfachster MaxHeap-Ersatz
 
+    def add_user(self, user_id, rating):
+                self.insert((rating, user_id))
+
+    def update_user_rating(self, user_id, new_rating):
+                # Entfernen und neu einfügen (einfachste Lösung)
+                self.remove(user_id)
+                self.insert((new_rating, user_id))
+
+    def get_top_user(self):
+                return self.get_max()

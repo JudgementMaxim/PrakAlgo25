@@ -36,7 +36,7 @@ class Auctions(dict):
 
         # für erstes Praktikum auf None setzen und für 2. Praktikum auf MaxHeap()
 
-        self._heap = MaxHeap()
+
         
 
         # TODO: für 2. Praktikum: erstelle hier ein MaxHeap, um den besten User/Verkäufer mit der Methode
@@ -49,6 +49,12 @@ class Auctions(dict):
 
         self._users = marketplace.users.Users("user.csv")
 
+        self._heap = MaxHeap()
+
+        for user_id, user in self._users.items():
+            mean_rating = user.get_rating_stars_mean()
+            self._heap.add_user(user_id, mean_rating)
+
         self._read_auctions_from_csvfile(csvfile)
 
         self._place_random_bids(num_bids=10 * self._users.num_users())
@@ -57,11 +63,16 @@ class Auctions(dict):
 
         self._stop_event = threading.Event()
 
-        # self._start_simulator()
+        self._start_simulator(user_id)
 
     # *** PUBLIC SET methods ***
 
     # *** PUBLIC methods ***
+
+    def update_user_rating(self,user_id):
+        if user_id not in self._users:
+            new_mean = self.users[user_id].get_rating_stars_mean()
+            self._heap_users_rated.update_user_rating(user_id, new_mean)
 
     def add_new_auction(self, user_id: str, item_name: str, description="", value_min=1):
         """
@@ -251,20 +262,27 @@ class Auctions(dict):
         :param with_num_stars: if True, then return stars together with user_id, else only return user_id
         :return:
         """
+        if not self._heap_users_rated:
+            return None
+
+        rating, user_id = self._heap_users_rated.get_top_user()
+
+        return (rating, user_id) if with_num_stars else user_id
+
         # TODO: do not use this part
         # stupid brute force implementation
-        max_user = None
-        max_stars = 0
-        for user_id, user in self._users.items():
-            stars_mean = user.get_rating_stars_mean()
-            if stars_mean > max_stars:
-                max_stars = stars_mean
-                max_user = user_id
+        #max_user = None
+        #max_stars = 0
+        # user_id, user in self._users.items():
+        #    stars_mean = user.get_rating_stars_mean()
+        #    if stars_mean > max_stars:
+        #        max_stars = stars_mean
+        #        max_user = user_id
 
-        if with_num_stars:
-            return [max_stars, max_user]
-        else:
-            return max_user
+        #if with_num_stars:
+        #   return [max_stars, max_user]
+        #else:
+        #    return max_user
 
         # TODO: instead use and probably change this
         # if not self._heap_users_rated:
@@ -372,6 +390,11 @@ class Auctions(dict):
         self._my_simulator.create_random_auctions(self, current_user_id)
 
         self._my_simulator.randomly_rate_users(self._users, current_user_id)
+
+        rated_user_id = self._my_simulator.randomly_rate_users(self._users, current_user_id)
+
+        if rated_user_id:
+            self.update_user_rating(rated_user_id)
 
         timer = threading.Timer(30, self._start_simulator, args=(current_user_id,))
         timer.start()

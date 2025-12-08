@@ -85,8 +85,8 @@ class Users(marketplace.praktikumsgruppen.Praktikumsgruppen):
         if group_members is None:
             return friend_names
 
-        # entferne mich selbst aus der Gruppe, da ich ja weiß, dass ich (user_id) in der Gruppe bin
-        group_members.remove(user_id)
+        if group_members:
+            group_members = [member for member in group_members if member != user_id]
 
         group_members_pp = [self.get_user_pretty_print_for_list(member) for member in group_members]
 
