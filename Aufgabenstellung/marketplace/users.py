@@ -9,7 +9,8 @@
 import csv
 import marketplace.user
 import marketplace.praktikumsgruppen
-
+from collections import deque
+import osmnx as ox
 
 class Users(marketplace.praktikumsgruppen.Praktikumsgruppen):
     # *** CONSTRUCTORS ***
@@ -47,9 +48,26 @@ class Users(marketplace.praktikumsgruppen.Praktikumsgruppen):
         user1 = self[user_id1]
         user2 = self[user_id2]
 
+
+        map_graph = ox.graph.graph_from_address(user1.address(), dist=5000, network_type='drive')
+        origin_point = user1.gps_coords()
+        destination_point = user2.gps_coords()
+        origin = ox.nearest_nodes(map_graph, origin_point[1], origin_point[0])
+        destination = ox.nearest_nodes(map_graph, destination_point[1], destination_point[0])
+        shortest_path = ox.distance.shortest_path(map_graph, origin, destination, weight='length')
+        #shortest path ist eine ordered list nach Dijkstras, wobei jeder eintrag ein Straßensegment der Route darstellt
+
         # TODO for students: replace this naive implementation of distance manhattan with distance gotten
         #  from graph algorithm
-        distance = sum(abs(a - b) for a, b in zip(user1.gps_coords(), user2.gps_coords()))
+        #distance = sum(abs(a - b) for a, b in zip(user1.gps_coords(), user2.gps_coords()))
+        distance = sum(map_graph[u][v][0]["length"]for u, v in zip(shortest_path[:-1], shortest_path[1:]))
+        """
+        shortest_path[:-1] Startet bei 0, gibt alle werte bis zum vorletzten (-1) wieder
+        shortest_path[1:] Startet bei index 1, gibt alle werte bis auf den ersten (0) wieder
+        zip macht aus diesen Paare von index 0 zu index 1, index 1 zu index 2 etc
+        map_graph ist ein directed multigraph, weshalb mit [0] eine kante ausgewählt werden muss, wobei bei 0 automatisch der kürzeste weg hinterlegt ist durch osmnx
+        von diesen wird die länge aufsummiert
+        """
 
         return distance
 
@@ -132,6 +150,32 @@ class Users(marketplace.praktikumsgruppen.Praktikumsgruppen):
         # TODO for students: Implement this method by filling the list suggested_friends
 
         suggested_friends = []
+        mutual_friends_suggestion = []
+        distance_connect_suggestion = []
+        for user in self:
+            if user == user_id:
+                continue
+            if user in self[user_id].friends():
+                continue
+
+
+            if mutual_friends_count.get(user, 0) >= num_common_friends:
+                mutual_friends_suggestion.append(user)
+
+            elif self.are_users_connected(user_id, user) and self.calc_distance_between_users(user_id, user) < distance_threshold:
+                distance_connect_suggestion.append(user)
+
+        mutual_friends_suggestion.sort(
+            key=lambda user: mutual_friends_count.get(user, 0),
+            reverse=True
+        )
+
+        distance_connect_suggestion.sort(
+            key=lambda user: self.calc_distance_between_users(user_id, user),
+            reverse=True
+        )
+
+        suggested_friends = mutual_friends_suggestion + distance_connect_suggestion
 
         if pretty_print:
             suggested_friends = [self[friend].pretty_print() for friend in suggested_friends]
@@ -148,6 +192,26 @@ class Users(marketplace.praktikumsgruppen.Praktikumsgruppen):
         """
         if user_id1 not in self or user_id2 not in self:
             return False
+
+        visited = set()             #self ist graph, user ist node
+        dist_to = {user_id1: 0}     #dictionary benötigt um bei degree abzubrechen
+        perimeter = deque([user_id1])
+        visited.add(user_id1)
+
+        while perimeter:
+            current = perimeter.popleft()
+
+            if dist_to[current] >= degree:
+                continue
+
+            for friend in self[current].friends():    #geht alle freunde von current ab, returns true wenn user_id2 gefunden wurde,
+                if friend == user_id2:                #ansonsten markiert diese als besucht, erhöht distanz und packt diese in queue
+                    return True
+
+                if friend not in visited:
+                    visited.add(friend)
+                    dist_to[friend] = dist_to[current] + 1
+                    perimeter.append(friend)
 
         # TODO for students: Implement this method
 
