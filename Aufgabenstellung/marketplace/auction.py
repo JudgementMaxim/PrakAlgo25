@@ -3,6 +3,8 @@
 # (purchaser_id). Es können mehrere User bei einer Auktion bieten, diese werden im Heap _users_bidding gespeichert
 
 import heapq
+import math
+
 import marketplace.user
 import marketplace.item
 import marketplace.stack
@@ -130,16 +132,32 @@ class Auction:
         else:
             return False
         
-    def calculate_portofee(self):
+    def calculate_portofee(self, bidder:marketplace.user.User, seller: marketplace.user.User):
         """
         Berechnet Porto für die Lieferung der Bestellung. Porto ist abhängig von Distanz zwischen Käufer
         und Verkäufer
         :return: Porto in Euro
         """
         # TODO (optionale Aufgabe in Praktikum 3): porto (fee) berechnen
-        
+        coords_bidder = bidder.gps_coords
+        coords_seller = seller.gps_coords
+
+        distance = self.get_distance(coords_bidder[0], coords_bidder[1], coords_seller[0], coords_seller[1])
+
+        distanceShortened = distance / 5
+
+        porto = 0.1 * distanceShortened
+
         return 0.0
+
     # *** PUBLIC GET methods ***
+
+    def get_distance(self, lat1, lon1, lat2, lon2):
+        R = 6371.0
+        lat1, lon1, lat2, lon2 = map(math.radians, [lat1, lon1, lat2, lon2])
+        dlat, dlon = lat2 - lat1, lon2 - lon1
+        a = math.sin(dlat / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2) ** 2
+        return R * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
     def sold(self):
         """
@@ -233,6 +251,8 @@ class Auction:
 
     def get_last_bid(self):
         return self._bids_ordered.peek()
+
+
 
     # *** PUBLIC STATIC methods ***
 
